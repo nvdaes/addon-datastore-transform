@@ -106,12 +106,12 @@ def writeAddons(addonDir: str, addons: WriteableAddons, supportedLanguages: Set[
 				addonWritePath = f"{addonDir}/en/{str(nvdaAPIVersion)}/{addonName}"
 				with open(addon.pathToData, "r", encoding="utf-8") as oldAddonFile:
 					addonData: Dict = json.load(oldAddonFile)
-					if "translations" in addonData:
-						del addonData["translations"]
+					# Create a copy without translations instead of deleting.
+					addonDataWithoutTranslations = {k: v for k, v in addonData.items() if k != "translations"}
 				Path(addonWritePath).mkdir(parents=True, exist_ok=True)
 				with open(f"{addonWritePath}/{channel}.json", "w") as newAddonFile:
-					validateJson(addonData, JSONSchemaPaths.ADDON_DATA)
-					json.dump(addonData, newAddonFile)
+					validateJson(addonDataWithoutTranslations, JSONSchemaPaths.ADDON_DATA)
+					json.dump(addonDataWithoutTranslations, newAddonFile)
 
 				latestAddonWritePath = f"{addonDir}/en/latest/{addonName}"
 				Path(latestAddonWritePath).mkdir(parents=True, exist_ok=True)
