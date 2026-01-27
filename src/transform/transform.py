@@ -125,10 +125,10 @@ def writeAddons(addonDir: str, addons: WriteableAddons, supportedLanguages: Set[
 					log.error(f"Latest version: {addonName} {channel} {nvdaAPIVersion}")
 					writtenLatestAddonForChannel.add(caseInsensitiveLatestAddonForChannel)
 					with open(f"{latestAddonWritePath}/{channel}.json", "w") as latestAddonFile:
-						json.dump(addonData, latestAddonFile)
+						json.dump(addonDataWithoutTranslations, latestAddonFile)
 
 				addonTranslations = {t["language"]: t for t in addon.translations}
-				translatedAddonData = addonData.copy()
+				translatedAddonData = addonDataWithoutTranslations.copy()
 				for lang in supportedLanguages:
 					addonWritePath = f"{addonDir}/{lang}/{str(nvdaAPIVersion)}/{addonName}"
 					langWithoutLocale = lang.split("_")[0]
